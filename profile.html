@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="video.png">
+  <link rel="stylesheet" href="profile.css" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>MyPathwayCv 🇹🇹 - User Profile</title>
+</head>
+<body>
+  <header>
+    <h1><a href="index.html" class="logo-link">MyPathwayCv 🇹🇹</a> - User Profile</h1>
+    <p>Welcome to your MyPathwayCv Profile!</p>
+  </header>
+
+  <div class="container">
+    <div id="profileInfo">
+      <h2>Welcome back, <span id="userEmail"></span>!</h2>
+    </div>
+    
+    <!-- File upload form -->
+    <form id="resumeUploadForm" enctype="multipart/form-data">
+      <label for="resume">Upload Resume:</label>
+      <input type="file" id="resume" name="resume">
+      <button type="button" id="uploadResumeBtn">Upload</button>
+      <!-- Display loading logo -->
+      <div id="loadingLogo" class="loading-logo">
+        <img src="loading.gif" alt="Loading">
+      </div>
+    </form>
+
+    <!-- Display download link for uploaded resume -->
+    <div id="downloadResume">
+      <h2>Your Uploaded Resume:</h2>
+      <a href="#" id="resumeLink" target="_blank">Download Resume</a>
+    </div>
+
+    <button id="logout">Logout</button>
+  </div>
+  
+  <!-- Display loading logo at bottom corner -->
+<div id="coolLogo" class="cool-logo">
+  <img src="cool.gif" alt=":)">
+</div>
+
+
+  <script type="module">
+  
+    // Import the necessary functions from Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, serverTimestamp, addDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-storage.js";
+
+
+
+    
+  const firebaseConfig = {
+    apiKey: "AIzaSyCep3axffzZP0BEfqAycZBRPwzPRPVP_QU",
+    authDomain: "fiery-blade-348316.firebaseapp.com",
+    projectId: "fiery-blade-348316",
+    storageBucket: "fiery-blade-348316.appspot.com",
+    messagingSenderId: "944198874241",
+    appId: "1:944198874241:web:26e9e11f5c6b84a7bcc980",
+    measurementId: "G-NJW7PFWF36"
+  };
+
+
+	  // Initialize Firebase
+	  const app = initializeApp(firebaseConfig);
+     const db = getFirestore(app); // Initialize Firestore database instance
+
+  // Check if user is logged in, else redirect to login page
+const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "index.html"; // Redirect to login page
+  } else {
+    console.log("User is authenticated:", user);
+    console.log("User UID:", user.uid);
+
+    // Retrieve user data from Firestore
+    const db = getFirestore(app);
+    const userDoc = doc(db, "users", user.uid);
+
+    getDoc(userDoc)
+      .then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          document.getElementById("userEmail").textContent = userData.email;
+        } else {
+          console.log("User data not found in Firestore.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error getting user data:", error);
+      });
+
+    // Update resume download link
+    updateResumeDownloadLink();
+  }
+});
+
+    // Logout button
+    document.getElementById("logout").addEventListener("click", () => {
+      signOut(auth)
+        .then(() => {
+          console.log("Sign-out successful.");
+          window.location.href = "index.html"; // Redirect to login page after logout
+        })
+        .catch((error) => {
+          console.error("An error happened during sign-out:", error);
+        });
+    });
+
+    const storage = getStorage(app);
+  const resumesCollection = collection(db, "resume");
+    function updateResumeDownloadLink() {
+      
+  // Retrieve user's resume data from Firestore
+  const userUid = auth.currentUser.uid;
+  const userResumeRef = query(resumesCollection, where("userUid", "==", userUid));
+  
+  getDocs(userResumeRef)
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const resumeData = querySnapshot.docs[0].data();
+        document.getElementById("resumeLink").href = resumeData.resumeUrl;
+        document.getElementById("resumeLink").textContent = "Download Resume";
+        document.getElementById("downloadResume").style.display = "block";
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching resume data:", error);
+    });
+}
+
+
+ // Handle resume upload
+document.getElementById("uploadResumeBtn").addEventListener("click", () => {
+  const resumeFile = document.getElementById("resume").files[0];
+  if (resumeFile) {
+    const storageRef = ref(storage, `resumes/${auth.currentUser.uid}/${resumeFile.name}`);
+    const loadingLogo = document.getElementById("loadingLogo");
+
+    // Show loading logo while uploading
+    loadingLogo.style.display = "block";
+    document.getElementById("uploadResumeBtn").disabled = true;
+
+    uploadBytes(storageRef, resumeFile)
+      .then(() => {
+        return getDownloadURL(storageRef);
+      })
+      .then((resumeUrl) => {
+        // Store resume data in Firestore
+        const uploadTime = serverTimestamp();
+        addDoc(resumesCollection, {
+          userUid: auth.currentUser.uid,
+          resumeUrl,
+          uploadedAt: uploadTime,
+        });
+        console.log("Resume uploaded and data stored.");
+
+        // Display download link
+        document.getElementById("resumeLink").href = resumeUrl;
+        document.getElementById("resumeLink").textContent = "Download Resume";
+        document.getElementById("downloadResume").style.display = "block";
+      })
+      .catch((error) => {
+        console.error("Error uploading resume:", error);
+      })
+      .finally(() => {
+        // Hide loading logo after upload completes or fails
+        loadingLogo.style.display = "none";
+        document.getElementById("uploadResumeBtn").disabled = false;
+      });
+  }
+});
+</script>
+
+</body>
+
+</html>

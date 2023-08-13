@@ -1,0 +1,181 @@
+body, h1, h2, p {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global styling */
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px; /* Reduce padding for smaller screens */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Header styling */
+header {
+  text-align: center;
+  margin-bottom: 20px; /* Reduce margin for smaller screens */
+  padding: 10px 0; /* Add some padding for better spacing */
+}
+
+h1 {
+  color: #007bff;
+  font-size: 28px; /* Slightly reduce font size for smaller screens */
+  margin-bottom: 10px; /* Reduce margin for smaller screens */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #333;
+  font-size: 24px; /* Slightly reduce font size for smaller screens */
+  margin-bottom: 15px; /* Reduce margin for smaller screens */
+}
+
+p {
+  margin-bottom: 15px; /* Reduce margin for smaller screens */
+  font-size: 16px; /* Slightly reduce font size for smaller screens */
+}
+
+/* Profile info section */
+#profileInfo {
+  padding: 15px; /* Reduce padding for smaller screens */
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  margin-top: 20px; /* Reduce margin for smaller screens */
+  border: 1px solid #ddd;
+}
+
+#userEmail {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Button styling */
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px; /* Reduce padding for smaller screens */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px; /* Slightly reduce font size for smaller screens */
+  text-transform: uppercase;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Styling for the loading logo */
+.loading-logo {
+  text-align: center;
+  display: none;
+  margin-top: 10px;
+}
+
+.loading-logo img {
+  width: 40px; /* Reduce image size for smaller screens */
+  height: 40px;
+}
+
+/* Additional styling for visual enhancements */
+.container::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+
+/* Hover effect for buttons */
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px; /* Add margin for better spacing */
+}
+
+.button-wrapper button {
+  margin: 0 5px; /* Reduce margin for smaller screens */
+  transition: transform 0.2s ease;
+}
+
+.button-wrapper button:hover {
+  transform: translateY(-1px);
+}
+
+/* Posts section styling */
+#postsSection {
+  margin-top: 20px; /* Reduce margin for smaller screens */
+}
+
+.post {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 15px; /* Reduce padding for smaller screens */
+  margin-bottom: 15px; /* Reduce margin for smaller screens */
+}
+
+.post h3 {
+  font-size: 20px; /* Slightly reduce font size for smaller screens */
+  margin-bottom: 8px; /* Reduce margin for smaller screens */
+}
+
+.post p {
+  margin-bottom: 10px; /* Reduce margin for smaller screens */
+  font-size: 14px; /* Slightly reduce font size for smaller screens */
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 600px) {
+  body {
+    background-size: cover; /* Set background to cover entire screen */
+  }
+
+  .container {
+    padding: 10px; /* Further reduce padding for smaller screens */
+  }
+
+  h1 {
+    font-size: 24px; /* Adjust font size for smaller screens */
+  }
+
+  h2 {
+    font-size: 20px; /* Adjust font size for smaller screens */
+  }
+
+  p {
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+
+  /* Other mobile-specific adjustments can be added here */
+}
+.coool-logo {
+  position: relative;
+  bottom: 50px; /* Adjust the distance from the bottom as needed */
+  right: 50px; /* Adjust the distance from the right as needed */
+  text-align: center;
+}
+
+.cool-logo img {
+  width: 150px;
+  height: 150px;
+}
